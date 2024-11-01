@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.maps.compose)
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.constraintlayout)
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.room)

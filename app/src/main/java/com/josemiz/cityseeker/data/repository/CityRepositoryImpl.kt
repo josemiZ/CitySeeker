@@ -16,10 +16,13 @@ class CityRepositoryImpl @Inject constructor(
     private val cityDao: CityDao,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : CityRepository {
+
     override suspend fun getCities(): List<CityModel> = withContext(dispatcher) {
-        if (cityDao.getCities().isEmpty()) {
+        val list = cityDao.getCities()
+        if (list.isEmpty()) {
+            val cities = cityService.getCities()
             cityDao.insertAll(
-                *cityService.getCities().map {
+                *cities.map {
                     City(
                         it.id,
                         it.name,
@@ -30,14 +33,30 @@ class CityRepositoryImpl @Inject constructor(
                     )
                 }.toTypedArray()
             )
+            return@withContext cities.map {
+                CityModel(
+                    it.country,
+                    it.name,
+                    it.id,
+                    false,
+                    CoordinatesModel(it.coordinates.longitude, it.coordinates.latitude)
+                )
+            }
         }
-        return@withContext cityDao.getCities().map {
+
+        return@withContext list.map {
             CityModel(
                 it.country,
                 it.city,
+                it.uid,
+                it.isFavorite,
                 CoordinatesModel(it.longitude, it.latitude)
             )
         }
     }
 
+    override suspend fun selectFavoriteCity(cityModel: CityModel): CityModel {
+        cityDao.updateFavoriteCity(!cityModel.isFavorite, cityModel.id)
+        return cityModel.copy(isFavorite = !cityModel.isFavorite)
+    }
 }

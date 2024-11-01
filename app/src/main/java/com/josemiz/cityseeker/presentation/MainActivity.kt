@@ -46,12 +46,15 @@ class MainActivity : ComponentActivity() {
                         CitySeeker(
                             cities = state.cities,
                             modifier = Modifier.fillMaxSize(),
-                            onQueryChange = viewModel::filterCities
+                            onQueryChange = viewModel::filterCities,
+                            onFavoriteClicked = viewModel::onFavoriteClicked
                         ) { city ->
                             navController.navigate(
                                 CityNavigation.CityMap(
+                                    id = city.id,
                                     city = city.city,
                                     country = city.country,
+                                    isFavorite = city.isFavorite,
                                     long = city.longitude,
                                     lat = city.latitude
                                 )
@@ -61,7 +64,14 @@ class MainActivity : ComponentActivity() {
                     composable<CityNavigation.CityMap> {
                         val args = it.toRoute<CityNavigation.CityMap>()
                         CityMap(
-                            city = City(args.city, args.country, args.lat, args.long),
+                            city = City(
+                                id = args.id,
+                                city = args.city,
+                                country = args.country,
+                                isFavorite = args.isFavorite,
+                                latitude = args.lat,
+                                longitude = args.long
+                            ),
                             modifier = Modifier.fillMaxSize()
                         )
                     }

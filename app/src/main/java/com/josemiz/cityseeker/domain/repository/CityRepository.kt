@@ -4,4 +4,5 @@ import com.josemiz.cityseeker.domain.model.CityModel
 
 interface CityRepository {
     suspend fun getCities(): List<CityModel>
+    suspend fun selectFavoriteCity(cityModel: CityModel): CityModel
 }

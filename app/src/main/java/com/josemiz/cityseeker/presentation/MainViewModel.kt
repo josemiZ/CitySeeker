@@ -3,8 +3,10 @@ package com.josemiz.cityseeker.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.josemiz.cityseeker.domain.model.CityModel
+import com.josemiz.cityseeker.domain.model.CoordinatesModel
 import com.josemiz.cityseeker.domain.usecase.FilterCitiesUseCase
 import com.josemiz.cityseeker.domain.usecase.GetCitiesUseCase
+import com.josemiz.cityseeker.domain.usecase.SelectFavoriteCityUseCase
 import com.josemiz.cityseeker.presentation.model.Cities
 import com.josemiz.cityseeker.presentation.model.City
 import com.josemiz.cityseeker.presentation.model.CityUiState
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val useCase: GetCitiesUseCase,
     private val filterUseCase: FilterCitiesUseCase,
+    private val favoriteCityUseCase: SelectFavoriteCityUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CityUiState())
@@ -38,18 +41,16 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun transformToCities(list: List<CityModel>): Cities {
-        return Cities(
-            list.map {
-                City(
-                    city = it.city,
-                    country = it.country,
-                    longitude = it.coordinate.lon,
-                    latitude = it.coordinate.lat,
-                )
-            }
-        )
-    }
+    private fun transformToCities(list: List<CityModel>) = Cities(list.map(::transformToCity))
+
+    private fun transformToCity(city: CityModel) = City(
+        id = city.id,
+        city = city.city,
+        country = city.country,
+        isFavorite = city.isFavorite,
+        longitude = city.coordinate.lon,
+        latitude = city.coordinate.lat,
+    )
 
     fun filterCities(filter: String) {
         fetchJob {
@@ -59,6 +60,31 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun onFavoriteClicked(cityClicked: City) {
+        fetchJob {
+            val city = favoriteCityUseCase.invoke(
+                CityModel(
+                    country = cityClicked.country,
+                    city = cityClicked.city,
+                    id = cityClicked.id,
+                    isFavorite = cityClicked.isFavorite,
+                    CoordinatesModel(cityClicked.longitude, cityClicked.latitude)
+                )
+            )
+            _uiState.update {
+                it.copy(cities = it.cities.updateMappedCity(transformToCity(city)))
+            }
+        }
+    }
+
+    private fun Cities.updateMappedCity(city: City): Cities = copy(cities = cities.map {
+        if (it.id == city.id) {
+            it.copy(isFavorite = city.isFavorite)
+        } else {
+            it
+        }
+    })
 
     private fun fetchJob(job: suspend () -> Unit) {
         fetchJob?.cancel()

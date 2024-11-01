@@ -3,6 +3,7 @@ package com.josemiz.cityseeker.domain
 import com.josemiz.cityseeker.domain.repository.CityRepository
 import com.josemiz.cityseeker.domain.usecase.FilterCitiesUseCase
 import com.josemiz.cityseeker.domain.usecase.GetCitiesUseCase
+import com.josemiz.cityseeker.domain.usecase.SelectFavoriteCityUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,4 +22,9 @@ object DomainModule {
     fun provideFilterCityUseCase(
         cityRepository: CityRepository,
     ): FilterCitiesUseCase = FilterCitiesUseCase(cityRepository)
+
+    @Provides
+    fun provideSelectFavoriteCityUseCase(
+        cityRepository: CityRepository,
+    ): SelectFavoriteCityUseCase = SelectFavoriteCityUseCase(cityRepository)
 }

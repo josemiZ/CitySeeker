@@ -16,6 +16,7 @@ fun CitySeeker(
     cities: Cities,
     modifier: Modifier = Modifier,
     onQueryChange: (String) -> Unit,
+    onFavoriteClicked: (City) -> Unit,
     onCityClick: (City) -> Unit
 ) {
 
@@ -31,6 +32,7 @@ fun CitySeeker(
                 .fillMaxWidth()
                 .padding(padding)
                 .padding(10.dp),
+            onFavoriteClicked = onFavoriteClicked,
             onItemClick = onCityClick
         )
     }
@@ -43,12 +45,13 @@ private fun Preview() {
         CitySeeker(
             cities = Cities(
                 listOf(
-                    City("Lima", "PE", 12.0, 12.0),
-                    City("Los Angeles", "US", 21.0, 21.0),
+                    City(1,"Lima", "PE", true,12.0, 12.0),
+                    City(2,"Los Angeles", "US", false,21.0, 21.0),
                 )
             ),
             modifier = Modifier.fillMaxWidth(),
-            onQueryChange = {}
+            onQueryChange = {},
+            onFavoriteClicked = {}
         ){}
     }
 }
