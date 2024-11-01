@@ -1,6 +1,7 @@
 package com.josemiz.cityseeker.domain
 
 import com.josemiz.cityseeker.domain.repository.CityRepository
+import com.josemiz.cityseeker.domain.usecase.FilterCitiesUseCase
 import com.josemiz.cityseeker.domain.usecase.GetCitiesUseCase
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,10 @@ object DomainModule {
     @Provides
     fun provideCityUseCase(
         cityRepository: CityRepository,
-    ): GetCitiesUseCase {
-        return GetCitiesUseCase(cityRepository)
-    }
+    ): GetCitiesUseCase = GetCitiesUseCase(cityRepository)
+
+    @Provides
+    fun provideFilterCityUseCase(
+        cityRepository: CityRepository,
+    ): FilterCitiesUseCase = FilterCitiesUseCase(cityRepository)
 }

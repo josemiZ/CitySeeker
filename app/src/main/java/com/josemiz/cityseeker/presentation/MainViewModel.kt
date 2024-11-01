@@ -3,6 +3,7 @@ package com.josemiz.cityseeker.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.josemiz.cityseeker.domain.model.CityModel
+import com.josemiz.cityseeker.domain.usecase.FilterCitiesUseCase
 import com.josemiz.cityseeker.domain.usecase.GetCitiesUseCase
 import com.josemiz.cityseeker.presentation.model.Cities
 import com.josemiz.cityseeker.presentation.model.City
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val useCase: GetCitiesUseCase
+    private val useCase: GetCitiesUseCase,
+    private val filterUseCase: FilterCitiesUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CityUiState())
@@ -28,17 +30,10 @@ class MainViewModel @Inject constructor(
     private var fetchJob: Job? = null
 
     fun getCities() {
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
-            try {
-                val list = useCase.invoke()
-                _uiState.update {
-                    it.copy(cities = transformToCities(list))
-                }
-            } catch (io: IOException) {
-                _uiState.update {
-                    it.copy(errorMessage = io.message)
-                }
+        fetchJob {
+            val list = useCase.invoke()
+            _uiState.update {
+                it.copy(cities = transformToCities(list))
             }
         }
     }
@@ -54,5 +49,27 @@ class MainViewModel @Inject constructor(
                 )
             }
         )
+    }
+
+    fun filterCities(filter: String) {
+        fetchJob {
+            val list = filterUseCase.invoke(filter)
+            _uiState.update {
+                it.copy(cities = transformToCities(list))
+            }
+        }
+    }
+
+    private fun fetchJob(job: suspend () -> Unit) {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
+            try {
+                job.invoke()
+            } catch (io: IOException) {
+                _uiState.update {
+                    it.copy(errorMessage = io.message)
+                }
+            }
+        }
     }
 }

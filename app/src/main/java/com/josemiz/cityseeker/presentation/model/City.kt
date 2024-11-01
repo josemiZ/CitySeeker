@@ -5,4 +5,6 @@ data class City(
     val country: String,
     val latitude: Double,
     val longitude: Double,
-)
+) {
+    fun getName() : String = "$city, $country"
+}

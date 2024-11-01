@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.josemiz.cityseeker.presentation.model.City
 import com.josemiz.cityseeker.presentation.navigation.CityNavigation
 import com.josemiz.cityseeker.presentation.ui.CityMap
 import com.josemiz.cityseeker.presentation.ui.CitySeeker
@@ -44,11 +45,13 @@ class MainActivity : ComponentActivity() {
 
                         CitySeeker(
                             cities = state.cities,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            onQueryChange = viewModel::filterCities
                         ) { city ->
                             navController.navigate(
                                 CityNavigation.CityMap(
-                                    city = "${city.city}, ${city.country}",
+                                    city = city.city,
+                                    country = city.country,
                                     long = city.longitude,
                                     lat = city.latitude
                                 )
@@ -58,9 +61,7 @@ class MainActivity : ComponentActivity() {
                     composable<CityNavigation.CityMap> {
                         val args = it.toRoute<CityNavigation.CityMap>()
                         CityMap(
-                            city = args.city,
-                            lon = args.long,
-                            lat = args.lat,
+                            city = City(args.city, args.country, args.lat, args.long),
                             modifier = Modifier.fillMaxSize()
                         )
                     }

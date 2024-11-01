@@ -7,5 +7,10 @@ object CityNavigation{
     object CityList
 
     @Serializable
-    data class CityMap(val city: String, val long: Double, val lat: Double)
+    data class CityMap(
+        val city: String,
+        val country: String,
+        val long: Double,
+        val lat: Double
+    )
 }

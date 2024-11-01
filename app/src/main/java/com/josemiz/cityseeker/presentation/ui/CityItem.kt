@@ -9,20 +9,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.josemiz.cityseeker.presentation.model.City
 import com.josemiz.cityseeker.presentation.ui.theme.CitySeekerTheme
 
 @Composable
 fun CityItem(
-    city: String,
-    country: String,
+    city: City,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Card(onClick = onClick, modifier = modifier) {
         Text(
-            text = "$city ,$country",
+            text = city.getName(),
             color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(10.dp)
         )
     }
@@ -33,8 +33,7 @@ fun CityItem(
 private fun Preview(){
     CitySeekerTheme {
         CityItem(
-            city = "Lima",
-            country = "PE",
+            city = City("Lima", "PE", -123.2, 1234.2),
             modifier = Modifier.fillMaxWidth()
         ) {}
     }

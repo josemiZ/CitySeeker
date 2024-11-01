@@ -15,8 +15,7 @@ fun CityListView(cities: Cities, modifier: Modifier = Modifier, onItemClick: (Ci
     LazyColumn(modifier = modifier) {
         items(cities.cities) {
             CityItem(
-                city = it.city,
-                country = it.country,
+                city = it,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onItemClick.invoke(it) }
             )

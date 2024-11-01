@@ -8,15 +8,16 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.josemiz.cityseeker.presentation.model.City
 
 @Composable
 fun CityMap(
-    city: String,
-    lon: Double,
-    lat: Double,
+    city: City?,
     modifier: Modifier = Modifier
 ) {
 
+    val lat = city?.latitude?:0.0
+    val lon = city?.longitude?:0.0
     val latLng = LatLng(lat, lon)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(latLng, 15f)
@@ -25,9 +26,11 @@ fun CityMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
     ) {
-        Marker(
-            state = MarkerState(position = latLng),
-            title = city
-        )
+        if (city != null) {
+            Marker(
+                state = MarkerState(position = latLng),
+                title = city.getName()
+            )
+        }
     }
 }
