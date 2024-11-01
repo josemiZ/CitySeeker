@@ -77,6 +77,9 @@ dependencies {
     implementation(libs.retrofit.gson)
 
     implementation(libs.hilt)
+    implementation(libs.androidx.runner)
+    implementation(libs.core.ktx)
+    implementation(libs.androidx.junit.ktx)
     kapt(libs.hilt.compiler)
 
     implementation(libs.maps.compose)
@@ -92,6 +95,7 @@ dependencies {
     kapt(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
