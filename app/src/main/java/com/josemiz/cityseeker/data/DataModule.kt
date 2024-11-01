@@ -1,6 +1,9 @@
 package com.josemiz.cityseeker.data
 
 import com.josemiz.cityseeker.data.remote.CityService
+import com.josemiz.cityseeker.data.repository.CityRepositoryImpl
+import com.josemiz.cityseeker.domain.repository.CityRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,4 +28,14 @@ object DataModule {
     fun provideCityService(retrofit: Retrofit): CityService {
         return retrofit.create(CityService::class.java)
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    abstract fun bindCityRepository(
+        cityRepositoryImpl: CityRepositoryImpl
+    ): CityRepository
 }

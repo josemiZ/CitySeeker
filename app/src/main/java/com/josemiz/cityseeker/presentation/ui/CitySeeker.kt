@@ -18,8 +18,7 @@ import com.josemiz.cityseeker.presentation.model.City
 import com.josemiz.cityseeker.presentation.ui.theme.CitySeekerTheme
 
 @Composable
-fun CitySeeker(cities: Cities, modifier: Modifier = Modifier) {
-
+fun CitySeeker(cities: Cities, modifier: Modifier = Modifier, onCityClick: (City) -> Unit) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
@@ -40,7 +39,8 @@ fun CitySeeker(cities: Cities, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(padding)
-                .padding(10.dp)
+                .padding(10.dp),
+            onItemClick = onCityClick
         )
     }
 }
@@ -57,6 +57,6 @@ private fun Preview() {
                 )
             ),
             modifier = Modifier.fillMaxWidth()
-        )
+        ){}
     }
 }

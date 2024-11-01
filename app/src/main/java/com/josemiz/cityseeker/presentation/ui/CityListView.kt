@@ -11,10 +11,15 @@ import com.josemiz.cityseeker.presentation.model.City
 import com.josemiz.cityseeker.presentation.ui.theme.CitySeekerTheme
 
 @Composable
-fun CityListView(cities: Cities, modifier: Modifier = Modifier) {
+fun CityListView(cities: Cities, modifier: Modifier = Modifier, onItemClick: (City) -> Unit) {
     LazyColumn(modifier = modifier) {
         items(cities.cities) {
-            CityItem(city = it.city, country = it.country, modifier = Modifier.fillMaxWidth())
+            CityItem(
+                city = it.city,
+                country = it.country,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onItemClick.invoke(it) }
+            )
         }
     }
 }
@@ -30,6 +35,6 @@ private fun Preview() {
                     City("Los Angeles", "US", 21.0, 21.0),
                 )
             )
-        )
+        ){}
     }
 }

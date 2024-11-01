@@ -16,7 +16,7 @@ fun CityItem(
     city: String,
     country: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     Card(onClick = onClick, modifier = modifier) {
         Text(
@@ -36,6 +36,6 @@ private fun Preview(){
             city = "Lima",
             country = "PE",
             modifier = Modifier.fillMaxWidth()
-        )
+        ) {}
     }
 }
